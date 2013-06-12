@@ -41,6 +41,8 @@ s/\\footnotemark\[([0-9]+)\]/\\cite\{bib\1\}/g;
 s/\\footnotetext\[1\]/\\begin\{thebibliography\}\{9\}\n\\bibitem\{bib1\} /;
 s/\\footnotetext\[([0-9]+)\]/\n\\bibitem\{bib\1\} /g;
 s/\\section\{/\\section*\{/;
+s/\\subsection\{/\\subsection*\{/;
+s/\\subsubsection\{/\\subsubsection*\{/;
 '
 EOF
   sed = IO.popen(sed_cmd,'w+')
