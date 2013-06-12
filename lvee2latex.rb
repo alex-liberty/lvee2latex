@@ -6,11 +6,10 @@ require "rubygems"
 require "open-uri"
 require "json"
 require "redcloth"
+require "shell"
 
-if ARGV[0] == nil 
-	puts "No id." 
-	exit 1
-end
+abort "No id." unless ARGV[0]
+fix_bib = true if ARGV[1] == '1'
 
 id=ARGV[0]
 document = JSON.parse(open("http://lvee.org/en/abstracts/#{id}.json").read)
@@ -29,6 +28,19 @@ EOF
 puts "\\title{#{title}}"
 puts "\\author{#{authors}}"
 puts '\\maketitle'
+
+if fix_bib
+  sh = Shell.new
+  sed_cmd = <<'EOF'
+sed -E 's/\\footnotemark\[([0-9]+)\]/\\cite\{bib\1\}/;s/\\footnotetext\[1\]/\\begin\{thebibliography\}\{9\}\n\\bibitem\{bib1\} /;s/\\footnotetext\[([1-9]+)\]/\n\\bibitem\{bib\1\} /'
+EOF
+  sed = IO.popen(sed_cmd,'w+')
+  # $stderr.write sed_cmd
+  sed.write(body)
+  sed.close_write
+  body = sed.read
+  body << '\end{thebibliography}'
+end
 
 puts body
 
