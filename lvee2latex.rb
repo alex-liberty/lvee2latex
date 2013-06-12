@@ -34,12 +34,11 @@ puts abstract
 puts '\end{abstract}'
 
 sh = Shell.new
-sed_cmd = <<'EOF'
-sed -r '
+sed_cmd = 'sed -r \''
+sed_cmd += <<'EOF'
 s/\\section\{/\\section*\{/;
 s/\\subsection\{/\\subsection*\{/;
 s/\\subsubsection\{/\\subsubsection*\{/;
-'
 EOF
 
 if fix_bib
@@ -49,6 +48,8 @@ s/\\footnotetext\[1\]/\\begin\{thebibliography\}\{9\}\n\\bibitem\{bib1\} /;
 s/\\footnotetext\[([0-9]+)\]/\n\\bibitem\{bib\1\} /g;
 EOF
 end
+
+sed_cmd += '\''
 
 sed = IO.popen(sed_cmd,'w+')
 sed.write(body)
