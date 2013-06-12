@@ -37,9 +37,9 @@ if fix_bib
   sh = Shell.new
   sed_cmd = <<'EOF'
 sed -E '
-s/\\footnotemark\[([0-9]+)\]/\\cite\{bib\1\}/;
+s/\\footnotemark\[([0-9]+)\]/\\cite\{bib\1\}/g;
 s/\\footnotetext\[1\]/\\begin\{thebibliography\}\{9\}\n\\bibitem\{bib1\} /;
-s/\\footnotetext\[([1-9]+)\]/\n\\bibitem\{bib\1\} /;
+s/\\footnotetext\[([0-9]+)\]/\n\\bibitem\{bib\1\} /g;
 s/\\section\{/\\section*\{/;
 '
 EOF
