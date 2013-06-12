@@ -33,23 +33,28 @@ puts '\begin{abstract}'
 puts abstract
 puts '\end{abstract}'
 
-if fix_bib
-  sh = Shell.new
-  sed_cmd = <<'EOF'
+sh = Shell.new
+sed_cmd = <<'EOF'
 sed -E '
-s/\\footnotemark\[([0-9]+)\]/\\cite\{bib\1\}/g;
-s/\\footnotetext\[1\]/\\begin\{thebibliography\}\{9\}\n\\bibitem\{bib1\} /;
-s/\\footnotetext\[([0-9]+)\]/\n\\bibitem\{bib\1\} /g;
 s/\\section\{/\\section*\{/;
 s/\\subsection\{/\\subsection*\{/;
 s/\\subsubsection\{/\\subsubsection*\{/;
 '
 EOF
-  sed = IO.popen(sed_cmd,'w+')
-  # $stderr.write sed_cmd
-  sed.write(body)
-  sed.close_write
-  body = sed.read
+
+if fix_bib
+  sed_cmd += <<'EOF'
+s/\\footnotemark\[([0-9]+)\]/\\cite\{bib\1\}/g;
+s/\\footnotetext\[1\]/\\begin\{thebibliography\}\{9\}\n\\bibitem\{bib1\} /;
+s/\\footnotetext\[([0-9]+)\]/\n\\bibitem\{bib\1\} /g;
+EOF
+end
+
+sed = IO.popen(sed_cmd,'w+')
+sed.write(body)
+sed.close_write
+body = sed.read
+if fix_bib
   body << '\end{thebibliography}'
 end
 
