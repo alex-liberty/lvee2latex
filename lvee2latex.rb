@@ -29,10 +29,19 @@ puts "\\title{#{title}}"
 puts "\\author{#{authors}}"
 puts '\\maketitle'
 
+puts '\begin{abstract}'
+puts abstract
+puts '\end{abstract}'
+
 if fix_bib
   sh = Shell.new
   sed_cmd = <<'EOF'
-sed -E 's/\\footnotemark\[([0-9]+)\]/\\cite\{bib\1\}/;s/\\footnotetext\[1\]/\\begin\{thebibliography\}\{9\}\n\\bibitem\{bib1\} /;s/\\footnotetext\[([1-9]+)\]/\n\\bibitem\{bib\1\} /'
+sed -E '
+s/\\footnotemark\[([0-9]+)\]/\\cite\{bib\1\}/;
+s/\\footnotetext\[1\]/\\begin\{thebibliography\}\{9\}\n\\bibitem\{bib1\} /;
+s/\\footnotetext\[([1-9]+)\]/\n\\bibitem\{bib\1\} /;
+s/\\section\{/\\section*\{/;
+'
 EOF
   sed = IO.popen(sed_cmd,'w+')
   # $stderr.write sed_cmd
