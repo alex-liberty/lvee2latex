@@ -12,7 +12,7 @@ abort "No id." unless ARGV[0]
 fix_bib = true if ARGV[1] == '1'
 
 id=ARGV[0]
-document = JSON.parse(open("http://lvee.org/en/abstracts/#{id}.json").read)
+document = JSON.parse(open("https://lvee.org/en/abstracts/#{id}.json").read)
 
 title = document['title']
 authors = document['authors']
